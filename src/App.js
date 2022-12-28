@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import Dot from "./dot";
 
@@ -27,17 +27,21 @@ function App() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [commandMode, setDotsKeys, dotsKeys, dots]);
 
-  const handleClick = (event) => {
-    setDots({
-      ...dots,
-      [dotsKeys.length + 1]: {
-        clientX: event.clientX,
-        clientY: event.clientY,
-        key: dotsKeys.length + 1,
-      },
-    });
-    setDotsKeys([...dotsKeys, dotsKeys.length + 1]);
-  };
+  const handleClick = useCallback(
+    (event) => {
+      setDots({
+        ...dots,
+        [dotsKeys.length + 1]: {
+          clientX: event.clientX,
+          clientY: event.clientY,
+          key: dotsKeys.length + 1,
+        },
+      });
+      setDotsKeys([...dotsKeys, dotsKeys.length + 1]);
+    },
+    [dotsKeys, dots]
+  );
+
   return (
     <div className="App" onClick={handleClick}>
       {dotsKeys.map((key) => (
